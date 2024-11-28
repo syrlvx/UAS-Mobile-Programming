@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/widgets/bottom_nav_bar.dart';
+import 'package:netflix_clone/screens/globals.dart' as globals;
 
 class Username extends StatefulWidget {
   const Username({super.key});
@@ -19,25 +20,28 @@ class _UsernameState extends State<Username> {
           children: [
             SizedBox(height: size.height * 0.02),
             Header(size: size),
-            SizedBox(height: size.height * 0.1),
-            username(
-              size: size,
-              username1: "Muhammad",
-              username2: "Hermawan",
-              image1:
-                  "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.webp",
-              image2:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png",
+            Center(
+              child: Text("Halo, ${globals.nama}"),
             ),
             SizedBox(height: size.height * 0.05),
             username(
               size: size,
-              username1: "Ophelia",
-              username2: "Raffi",
+              username1: "woi",
+              username2: "Ul",
               image1:
-                  "https://i.pinimg.com/564x/1b/a2/e6/1ba2e6d1d4874546c70c91f1024e17fb.jpg",
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTNlixg4qwjWdWKOxakcDVFZtsrCe4UVQqkw&s",
               image2:
-                  "https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-dyrp6bw6adbulg5b.webp",
+                  "https://www.citypng.com/public/uploads/preview/png-mickey-mouse-disney-round-logo-701751694864249qxzevq6u7o.png?v=2024110602",
+            ),
+            SizedBox(height: size.height * 0.05),
+            username(
+              size: size,
+              username1: "Na",
+              username2: "Nic",
+              image1:
+                  "https://static.wikia.nocookie.net/pororo/images/2/26/PororoCurrentOutfit.jpg/revision/latest?cb=20220224154302",
+              image2:
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMTm25GDpVw281drFRvtI3HCGSNa7iGU8MAg&s",
             ),
             SizedBox(height: size.height * 0.08),
             Row(
@@ -141,13 +145,12 @@ class Header extends StatelessWidget {
     return Row(
       children: [
         SizedBox(width: size.width * 0.23),
-        Image.network(
-          'https://cdn.pixabay.com/photo/2021/01/25/07/18/netflix-5947489_1280.png',
-          width: 235,
-          height: 150,
+        Image.asset(
+          'assets/logo.png',
+          width: 225,
+          height: 185,
         ),
         Spacer(),
-        // Image.network('assets/img/bx_bxs-pencil.png'),
         SizedBox(width: size.width * 0.08),
       ],
     );

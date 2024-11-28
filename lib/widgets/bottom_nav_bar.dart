@@ -27,7 +27,7 @@ class BottomNavBar extends StatelessWidget {
               ),
               Tab(
                 icon: Icon(Icons.photo_library_outlined),
-                text: "New & Hot",
+                text: "Up Coming",
               ),
               Tab(
                 icon: Icon(Icons.download),

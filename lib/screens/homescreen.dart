@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/screens/search_screen.dart';
+import 'package:netflix_clone/screens/login_screen.dart';
+import 'package:netflix_clone/screens/logout_screen.dart';
+import 'package:netflix_clone/screens/movie_screen.dart';
+import 'package:netflix_clone/screens/settings_screen.dart';
 import 'package:netflix_clone/screens/username.dart';
+import 'package:netflix_clone/widgets/foryou_movies_card_widget.dart';
+import 'package:netflix_clone/widgets/liked_movies_card_widget.dart';
 import 'package:netflix_clone/widgets/nowplaying_movie_card_widget.dart';
 import 'package:netflix_clone/widgets/custom_carousel.dart';
-import 'package:netflix_clone/widgets/upcoming_movie_card_widget.dart';
+import 'package:netflix_clone/widgets/top_movies_card_widget.dart';
+import 'package:netflix_clone/widgets/watch_later_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
         title: Image.asset(
           'assets/logo.png',
@@ -29,30 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
           width: 120,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
             child: InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SearchScreen(),
+                    builder: (context) => const Username(),
                   ),
                 );
-              },
-              child: const Icon(
-                Icons.search,
-                size: 30,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Username()));
               },
               child: Container(
                 color: Colors.blue,
@@ -64,12 +58,36 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(
             width: 20,
           ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.settings,
+              color: Colors.white,
+              size: 30,
+            ),
+          )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             CustomCarouselSlider(),
+            // const SizedBox(
+            //   height: 20,
+            // ),
+            // SizedBox(
+            //   height: 220,
+            //   child: Favorite(
+            //     headlineText: 'Favorite',
+            //   ),
+            // ),
             const SizedBox(
               height: 20,
             ),
@@ -84,8 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(
               height: 220,
-              child: UpcomingMovieCard(
-                headlineText: 'Up Coming',
+              child: TopMoviesCard(
+                headlineText: 'Top 10 Movies',
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 220,
+              child: ForyouMoviesCard(
+                headlineText: 'For You',
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 220,
+              child: WatchLaterCard(
+                headlineText: 'My List',
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 220,
+              child: LikedMoviesCard(
+                headlineText: 'Liked Movies',
               ),
             ),
           ],

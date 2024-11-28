@@ -1,31 +1,13 @@
+import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/screens/movie_screen.dart';
 import 'package:netflix_clone/widgets/landing_card.dart';
 
 class CustomCarouselSlider extends StatelessWidget {
-  CustomCarouselSlider({
-    super.key,
-  });
-
-  // Data statis untuk slider
-  final List<Map<String, String>> data = [
-    {
-      "name": "Bird Box",
-      "image":
-          "https://www.mldspot.com/storage/posts/August2024/Bird%20Box%20(2018).webp",
-    },
-    {
-      "name": "Leave The Behind",
-      "image":
-          "https://www.mldspot.com/storage/posts/August2024/Leave%20the%20World%20Behind%20(2023).webp",
-    },
-    {
-      "name": "Move To Heaven",
-      "image":
-          "https://www.farah.id/assets/images/news/2024/04/20240406105325_normal.jpg",
-    },
-  ];
+  const CustomCarouselSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,23 +27,54 @@ class CustomCarouselSlider extends StatelessWidget {
       scrollDirection: Axis.horizontal,
     );
 
-    return SizedBox(
-      width: size.width,
-      height: (size.height * 0.33 < 300) ? 300 : size.height * 0.33,
-      child: CarouselSlider.builder(
-        itemCount: data.length,
-        itemBuilder: (BuildContext context, int index, int realIndex) {
-          var item = data[index];
-          return GestureDetector(
-            onTap: () {},
-            child: LandingCard(
-              image: CachedNetworkImageProvider(item["image"]!),
-              name: item["name"]!,
-            ),
-          );
-        },
-        options: carouselOptions,
-      ),
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('film') // Nama koleksi di Firebase
+          .where('status', isEqualTo: 'now_playing') // Filter status
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('No now playing movies found.'));
+        }
+
+        // Ambil data dan randomize
+        var movies = snapshot.data!.docs.toList();
+        movies.shuffle(Random());
+
+        return SizedBox(
+          width: size.width,
+          height: (size.height * 0.33 < 300) ? 300 : size.height * 0.33,
+          child: CarouselSlider.builder(
+            itemCount: movies.length,
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              var movie = movies[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MovieScreen(
+                        documentId:
+                            movie.id, // Kirim ID dokumen ke layar detail
+                      ),
+                    ),
+                  );
+                },
+                child: LandingCard(
+                  image: CachedNetworkImageProvider(movie['image']),
+                  name:
+                      movie['title'], // Pastikan ada field "title" di Firestore
+                ),
+              );
+            },
+            options: carouselOptions,
+          ),
+        );
+      },
     );
   }
 }
