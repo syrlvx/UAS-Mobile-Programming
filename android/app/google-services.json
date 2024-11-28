@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1035607342772",
+    "project_id": "flutter-d3c3c",
+    "storage_bucket": "flutter-d3c3c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035607342772:android:ce0fb85ffc461e60b0a1e1",
+        "android_client_info": {
+          "package_name": "com.example.netflix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW0Ho66DyXiHrmtuoEK2zq53UjPaeJbqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
