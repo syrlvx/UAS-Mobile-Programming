@@ -1,4 +1,4 @@
-# netflix
+# Cuplix
 
 A new Flutter project.
 
