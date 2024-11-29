@@ -6,3 +6,5 @@ String nama = "";
 String uid = "";
 IconData nanti = Icons.watch_later_outlined;
 IconData like = Icons.thumb_up_alt_outlined;
+String gambar = "";
+Color warna = Colors.blue;

@@ -11,6 +11,7 @@ import 'package:netflix_clone/widgets/nowplaying_movie_card_widget.dart';
 import 'package:netflix_clone/widgets/custom_carousel.dart';
 import 'package:netflix_clone/widgets/top_movies_card_widget.dart';
 import 'package:netflix_clone/widgets/watch_later_card_widget.dart';
+import 'package:netflix_clone/screens/globals.dart' as globals;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child: Container(
-                color: Colors.blue,
+                color: globals.warna,
                 height: 27,
                 width: 27,
               ),

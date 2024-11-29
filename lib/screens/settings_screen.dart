@@ -119,13 +119,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           },
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.start, // Mengatur elemen di kiri
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Untuk jarak antar elemen
           children: [
+            SizedBox(width: 10), // Elemen kiri kosong, jarak bisa diatur
             Image.asset(
               'assets/logo.png',
               width: 150,
               height: 100,
             ),
+            SizedBox(width: 50), // Elemen kanan kosong, jarak bisa diatur
           ],
         ),
       ),
@@ -207,10 +210,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: const Color.fromARGB(255, 196, 51, 70),
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
             ),
-            child: const Text("Edit Profile", style: TextStyle(fontSize: 18)),
+            child: const Text("Edit Profile",
+                style: TextStyle(color: Colors.white, fontSize: 18)),
           ),
         ),
         const SizedBox(height: 20),
@@ -219,7 +223,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: _logout,
             child: const Text(
               "Log Out",
-              style: TextStyle(color: Colors.red, fontSize: 16),
+              style: TextStyle(
+                  color: const Color.fromARGB(255, 196, 51, 70), fontSize: 16),
             ),
           ),
         ),
@@ -351,10 +356,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: ElevatedButton(
             onPressed: _updateUserData,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: const Color.fromARGB(255, 196, 51, 70),
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
             ),
-            child: const Text("Save Changes", style: TextStyle(fontSize: 18)),
+            child: const Text("Save Changes",
+                style: TextStyle(color: Colors.white, fontSize: 18)),
           ),
         ),
       ],

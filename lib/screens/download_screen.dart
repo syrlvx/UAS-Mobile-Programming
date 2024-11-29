@@ -74,8 +74,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Downloads'),
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'My Downloads',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       body: ListView.builder(
