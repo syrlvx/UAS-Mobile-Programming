@@ -344,6 +344,7 @@ class _NewsAndHotScreenState extends State<NewsAndHotScreen> {
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.black,
       body: GestureDetector(
