@@ -12,7 +12,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _query = "";
-  String _selectedGenre = "All Genres";
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
-                contentPadding:
-                    EdgeInsets.only(top: -2), // Menaikkan teks ke atas
+                contentPadding: EdgeInsets.only(top: -2),
               ),
             ),
           ),
@@ -50,37 +48,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          // Dropdown untuk Sort By Genre
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownButton<String>(
-              value: _selectedGenre,
-              dropdownColor: Colors.black,
-              iconEnabledColor: Colors.white,
-              items: <String>[
-                'All Genres',
-                'Action',
-                'Drama',
-                'Comedy',
-                'Horror',
-                'Sci-Fi'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child:
-                      Text(value, style: const TextStyle(color: Colors.white)),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedGenre = value!;
-                });
-              },
-            ),
-          ),
-
-          // Stream Builder untuk menampilkan hasil pencarian
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,29 +77,19 @@ class _SearchScreenState extends State<SearchScreen> {
                         return const Center(child: Text('No movies found.'));
                       }
 
-                      // Filter berdasarkan query dan genre
+                      // Filter berdasarkan query
                       final filteredMovies = snapshot.data!.docs.where((doc) {
                         final title =
                             (doc['title'] ?? '').toString().toLowerCase();
-                        final genre = (doc['genre'] ?? '').toString();
-                        return title.contains(_query) &&
-                            (_selectedGenre == 'All Genres' ||
-                                genre == _selectedGenre);
+                        return title.contains(_query);
                       }).toList();
 
                       if (filteredMovies.isEmpty) {
                         return const Center(child: Text('No results found.'));
                       }
 
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(16.0),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 10.0,
-                          childAspectRatio: 0.6,
-                        ),
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         itemCount: filteredMovies.length,
                         itemBuilder: (context, index) {
                           final movie = filteredMovies[index].data()
@@ -149,33 +106,65 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               );
                             },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Container(
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 16.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Gambar Film
+                                  Container(
+                                    width: 100,
+                                    height: 150,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image:
-                                            NetworkImage(movie['image'] ?? ''),
+                                        image: NetworkImage(
+                                          movie['image'] ?? '',
+                                        ),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  movie['title'] ?? '',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
+                                  const SizedBox(width: 16),
+                                  // Informasi Film di Tengah
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          movie['title'] ?? '',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        // Ikon Play
+                                        Row(
+                                          children: const [
+                                            Icon(Icons.play_circle_fill,
+                                                color: Colors.red, size: 24),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "Play",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },
