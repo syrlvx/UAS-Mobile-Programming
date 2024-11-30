@@ -48,131 +48,124 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Text(
-                    "Recommended TV Shows & Movies",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+          // Jika tidak ada pencarian, tampilkan teks
+          if (_query.isEmpty)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft, // Memindahkan teks ke kiri
+                child: Text(
+                  "Recommended TV Shows & Movies",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.left, // Teks rata kiri
                 ),
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('film')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return const Center(child: Text('No movies found.'));
-                      }
+              ),
+            ),
 
-                      // Filter berdasarkan query
-                      final filteredMovies = snapshot.data!.docs.where((doc) {
-                        final title =
-                            (doc['title'] ?? '').toString().toLowerCase();
-                        return title.contains(_query);
-                      }).toList();
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('film').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('No movies found.'));
+                }
 
-                      if (filteredMovies.isEmpty) {
-                        return const Center(child: Text('No results found.'));
-                      }
+                // Filter berdasarkan query
+                final filteredMovies = snapshot.data!.docs.where((doc) {
+                  final title = (doc['title'] ?? '').toString().toLowerCase();
+                  return title.contains(_query);
+                }).toList();
 
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        itemCount: filteredMovies.length,
-                        itemBuilder: (context, index) {
-                          final movie = filteredMovies[index].data()
-                              as Map<String, dynamic>;
+                if (filteredMovies.isEmpty) {
+                  return const Center(child: Text('No results found.'));
+                }
 
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MovieScreen(
-                                    documentId: filteredMovies[index].id,
-                                  ),
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: filteredMovies.length,
+                  itemBuilder: (context, index) {
+                    final movie =
+                        filteredMovies[index].data() as Map<String, dynamic>;
+
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MovieScreen(
+                              documentId: filteredMovies[index].id,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Gambar Film
+                            Container(
+                              width: 100,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: NetworkImage(movie['image'] ?? ''),
+                                  fit: BoxFit.cover,
                                 ),
-                              );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 16.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            // Informasi Film di Tengah
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Gambar Film
-                                  Container(
-                                    width: 100,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          movie['image'] ?? '',
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
+                                  Text(
+                                    movie['title'] ?? '',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
                                   ),
-                                  const SizedBox(width: 16),
-                                  // Informasi Film di Tengah
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          movie['title'] ?? '',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
+                                  const SizedBox(height: 8),
+                                  // Ikon Play
+                                  Row(
+                                    children: const [
+                                      Icon(Icons.play_circle_fill,
+                                          color: Colors.red, size: 24),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Play",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
                                         ),
-                                        const SizedBox(height: 8),
-                                        // Ikon Play
-                                        Row(
-                                          children: const [
-                                            Icon(Icons.play_circle_fill,
-                                                color: Colors.red, size: 24),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              "Play",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
