@@ -327,30 +327,11 @@ class _NewsAndHotScreenState extends State<NewsAndHotScreen> {
   }
 
   void _onMovieTap(int movieId) async {
-    final movieDetails = await _fetchMovieDetails(movieId);
-    if (movieDetails != null) {
-      final trailerKey = await _fetchTrailerKey(movieId);
-      _showMovieDetails(context, movieDetails, trailerKey);
-    }
-  }
+    final details = await _fetchMovieDetails(movieId);
+    final trailerKey = details != null ? await _fetchTrailerKey(movieId) : null;
 
-  void _onVerticalSwipe(DragUpdateDetails details) {
-    if (details.primaryDelta! > 0) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.offset + 200,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    } else if (details.primaryDelta! < 0) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.offset - 200,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+    if (details != null) {
+      _showMovieDetails(context, details, trailerKey);
     }
   }
 
@@ -361,15 +342,6 @@ class _NewsAndHotScreenState extends State<NewsAndHotScreen> {
         title: const Text(
           "News And Hot",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.red, Colors.purple, Colors.blue],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
         ),
         centerTitle: true,
       ),
@@ -487,5 +459,9 @@ class _NewsAndHotScreenState extends State<NewsAndHotScreen> {
               ),
       ),
     );
+  }
+
+  void _onVerticalSwipe(DragUpdateDetails details) {
+    // Handle vertical swipe actions if needed
   }
 }
