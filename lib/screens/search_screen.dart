@@ -80,66 +80,110 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
 
           // Stream Builder untuk menampilkan hasil pencarian
+
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('film').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No movies found.'));
-                }
-
-                // Filter berdasarkan query dan genre
-                final filteredMovies = snapshot.data!.docs.where((doc) {
-                  final title = (doc['title'] ?? '').toString().toLowerCase();
-                  final genre = (doc['genre'] ?? '').toString();
-                  return title.contains(_query) &&
-                      (_selectedGenre == 'All Genres' ||
-                          genre == _selectedGenre);
-                }).toList();
-
-                if (filteredMovies.isEmpty) {
-                  return const Center(child: Text('No results found.'));
-                }
-
-                return GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                    childAspectRatio: 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Text(
+                    "Recommended TV Shows & Movies",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  itemCount: filteredMovies.length,
-                  itemBuilder: (context, index) {
-                    final movie =
-                        filteredMovies[index].data() as Map<String, dynamic>;
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('film')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text('No movies found.'));
+                      }
 
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieScreen(
-                              documentId: filteredMovies[index].id,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(movie['image'] ?? ''),
-                            fit: BoxFit.cover,
-                          ),
+                      // Filter berdasarkan query dan genre
+                      final filteredMovies = snapshot.data!.docs.where((doc) {
+                        final title =
+                            (doc['title'] ?? '').toString().toLowerCase();
+                        final genre = (doc['genre'] ?? '').toString();
+                        return title.contains(_query) &&
+                            (_selectedGenre == 'All Genres' ||
+                                genre == _selectedGenre);
+                      }).toList();
+
+                      if (filteredMovies.isEmpty) {
+                        return const Center(child: Text('No results found.'));
+                      }
+
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(16.0),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 10.0,
+                          childAspectRatio: 0.6,
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
+                        itemCount: filteredMovies.length,
+                        itemBuilder: (context, index) {
+                          final movie = filteredMovies[index].data()
+                              as Map<String, dynamic>;
+
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MovieScreen(
+                                    documentId: filteredMovies[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image:
+                                            NetworkImage(movie['image'] ?? ''),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  movie['title'] ?? '',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
