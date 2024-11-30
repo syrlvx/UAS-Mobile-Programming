@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-            child: Icon(
+            child: const Icon(
               Icons.settings,
               color: Colors.white,
               size: 30,
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CustomCarouselSlider(),
+            const CustomCarouselSlider(),
             // const SizedBox(
             //   height: 20,
             // ),
@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
+            const SizedBox(
               height: 220,
               child: TopMoviesCard(
                 headlineText: 'Top 10 Movies',

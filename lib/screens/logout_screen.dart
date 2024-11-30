@@ -41,7 +41,7 @@ class _LogoutScreenState extends State<LogoutScreen> {
 
                 await signOut();
                 Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),

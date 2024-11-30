@@ -51,7 +51,7 @@ class _UsernameState extends State<Username> {
                       size: 60,
                     ),
                     SizedBox(height: size.height * 0.01),
-                    Text("Add Profile", style: TextStyle(color: Colors.white)),
+                    const Text("Add Profile", style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ],
@@ -85,7 +85,6 @@ class username extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // First row with two images
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -207,7 +206,7 @@ class Header extends StatelessWidget {
           width: 225,
           height: 185,
         ),
-        Spacer(),
+        const Spacer(),
         SizedBox(width: size.width * 0.08),
       ],
     );

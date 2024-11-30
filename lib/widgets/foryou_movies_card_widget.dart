@@ -6,7 +6,7 @@ import 'package:netflix_clone/screens/movie_screen.dart';
 class ForyouMoviesCard extends StatelessWidget {
   final String headlineText;
 
-  ForyouMoviesCard({
+  const ForyouMoviesCard({
     super.key,
     required this.headlineText,
   });

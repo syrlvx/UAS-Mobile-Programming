@@ -7,7 +7,7 @@ import 'package:netflix_clone/screens/globals.dart' as globals;
 class WatchLaterCard extends StatelessWidget {
   final String headlineText;
 
-  WatchLaterCard({
+  const WatchLaterCard({
     super.key,
     required this.headlineText,
   });

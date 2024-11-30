@@ -7,7 +7,7 @@ import 'package:netflix_clone/screens/globals.dart' as globals;
 class LikedMoviesCard extends StatelessWidget {
   final String headlineText;
 
-  LikedMoviesCard({
+  const LikedMoviesCard({
     super.key,
     required this.headlineText,
   });

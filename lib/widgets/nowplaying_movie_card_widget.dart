@@ -6,7 +6,7 @@ import 'package:netflix_clone/screens/movie_screen.dart';
 class NowplayingMovieCard extends StatelessWidget {
   final String headlineText;
 
-  NowplayingMovieCard({
+  const NowplayingMovieCard({
     super.key,
     required this.headlineText,
   });

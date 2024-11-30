@@ -153,8 +153,8 @@ class _MovieScreenState extends State<MovieScreen> {
                                     content: Text('Download starting')),
                               );
                             },
-                            child: Column(
-                              children: const [
+                            child: const Column(
+                              children: [
                                 Icon(Icons.download_rounded,
                                     color: Colors.white),
                                 SizedBox(height: 5),

@@ -39,7 +39,7 @@ class BottomNavBar extends StatelessWidget {
             indicatorColor: Colors.transparent,
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             HomeScreen(),
             SearchScreen(),

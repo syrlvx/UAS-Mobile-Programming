@@ -13,11 +13,11 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final FirebaseAuthService _auth = FirebaseAuthService();
-  TextEditingController _username = TextEditingController();
-  TextEditingController _email = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _birthdayController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _birthdayController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   String? _selectedGender;
 
   @override
@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               children: [
                 Header(size: size),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 const Text(
                   'Sign Up',
                   style: TextStyle(
