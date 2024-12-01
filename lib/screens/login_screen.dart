@@ -17,87 +17,88 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Header(size: size),
-              SizedBox(height: size.height * 0.1),
-              const Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 40.0),
-              TextField(
-                controller: _email,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  fillColor: Colors.black,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: const Icon(Icons.email),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: _password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: const Icon(Icons.lock),
-                ),
-              ),
-              const SizedBox(height: 40.0),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    tunggu();
-                    print("pencet");
-                    print(globals.nama);
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50.0, vertical: 15.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Center(
+            child: Column(
+              children: [
+                Header(size: size),
+                SizedBox(height: size.height * 0.1),
+                const Text(
                   'Login',
-                  style: TextStyle(fontSize: 18.0),
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignupScreen(),
+                const SizedBox(height: 40.0),
+                TextField(
+                  controller: _email,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    fillColor: Colors.black,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  );
-                },
-                child: const Text(
-                  'Not have a account?',
-                  style: TextStyle(color: Colors.blue),
+                    prefixIcon: const Icon(Icons.email),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20.0),
+                TextField(
+                  controller: _password,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    prefixIcon: const Icon(Icons.lock),
+                  ),
+                ),
+                const SizedBox(height: 40.0),
+                ElevatedButton(
+                  onPressed: () {
+                    tunggu();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignupScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Not have an account?',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -111,9 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
     if (user != null) {
-      print("succed");
+      print("Succeeded");
     } else {
-      print("Akun Salah");
+      print("Invalid credentials");
     }
   }
 
@@ -149,11 +150,10 @@ class _LoginScreenState extends State<LoginScreen> {
               });
             } else {
               print(
-                  'Kunci \'nama\' tidak ditemukan dalam data user dengan ID ${authState.uid}');
+                  'Field \'username\' not found for user ID ${authState.uid}');
             }
           } else {
-            print(
-                'Dokumen tidak ditemukan untuk user dengan ID ${authState.uid}');
+            print('Document not found for user ID ${authState.uid}');
           }
         } catch (e) {
           print('Error: $e');
