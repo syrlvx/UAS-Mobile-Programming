@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/screens/download_screen.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:netflix_clone/screens/globals.dart' as globals;
 
@@ -151,10 +152,14 @@ class _MovieScreenState extends State<MovieScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Download starting')),
-                              );
+                              );  
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => DownloadScreen()));
                             },
-                            child: const Column(
-                              children: [
+                            child: Column(
+                              children: const [
                                 Icon(Icons.download_rounded,
                                     color: Colors.white),
                                 SizedBox(height: 5),
