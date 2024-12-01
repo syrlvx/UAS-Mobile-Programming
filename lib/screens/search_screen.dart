@@ -135,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   
                   
 
-                  
+
                   itemBuilder: (context, index) {
                     final movie =
                         filteredMovies[index].data() as Map<String, dynamic>;
@@ -154,9 +154,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 16.0),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // Gambar Film
+                            // Poster Film
                             Container(
                               width: 100,
                               height: 150,
@@ -169,30 +168,44 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            // Informasi Film di Tengah
+                            // Informasi dan Ikon Play
                             Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    movie['title'] ?? '',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                  // Informasi Film
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          movie['title'] ?? '',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Genre: ${movie['genre'] ?? 'Unknown'}",
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
                                   ),
-                                  const SizedBox(height: 8),
-                                  // Genre
-                                  Text(
-                                    "Genre: ${movie['genre'] ?? 'Unknown'}",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
+                                  // Ikon Play
+                                  Icon(
+                                    Icons.play_circle_outline,
+                                    color: Colors.white,
+                                    size: 32,
                                   ),
                                 ],
                               ),
@@ -202,6 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     );
                   },
+
                 );
               },
             ),
