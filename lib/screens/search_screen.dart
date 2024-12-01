@@ -99,6 +99,23 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
 
+          // Teks "Recommended TV Shows & Movies" hanya jika genre "All Genre" dipilih dan tidak ada pencarian aktif
+          if (_selectedGenre == "All Genre" && _query.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Recommended TV Shows & Movies",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection('film').snapshots(),
@@ -132,10 +149,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: filteredMovies.length,
-                  
-                  
-
-
                   itemBuilder: (context, index) {
                     final movie =
                         filteredMovies[index].data() as Map<String, dynamic>;
@@ -168,13 +181,12 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            // Informasi dan Ikon Play
+                            // Informasi Film di Tengah
                             Expanded(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Informasi Film
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -191,6 +203,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           maxLines: 2,
                                         ),
                                         const SizedBox(height: 8),
+                                        // Genre
                                         Text(
                                           "Genre: ${movie['genre'] ?? 'Unknown'}",
                                           style: const TextStyle(
@@ -201,7 +214,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ],
                                     ),
                                   ),
-                                  // Ikon Play
                                   Icon(
                                     Icons.play_circle_outline,
                                     color: Colors.white,
@@ -215,7 +227,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     );
                   },
-
                 );
               },
             ),
