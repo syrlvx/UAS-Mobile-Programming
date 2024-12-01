@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:netflix_clone/screens/globals.dart' as globals;
 import 'dart:math'; // Tambahkan import ini untuk menghasilkan angka acak
 
-
 class DownloadScreen extends StatefulWidget {
   const DownloadScreen({Key? key}) : super(key: key);
 
@@ -76,6 +75,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(
           'My Downloads',
           style: TextStyle(color: Colors.white),
@@ -93,7 +93,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
               itemCount: downloadedMovies.length,
               itemBuilder: (context, index) {
                 final movie = downloadedMovies[index];
-                              final duration = movie['duration'] ?? _generateRandomDuration();
+                final duration = movie['duration'] ?? _generateRandomDuration();
 
                 return Column(
                   children: [

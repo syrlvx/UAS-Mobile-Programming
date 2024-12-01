@@ -299,13 +299,22 @@ class _WatchLaterButtonState extends State<WatchLaterButton> {
       final snapshot = await docRef.get();
       if (snapshot.exists) {
         if (isWatchLater) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Removed from your list.')),
+          );
           await docRef.update({widget.movieId: FieldValue.delete()});
         } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Added to your list.')),
+          );
           await docRef
               .set({widget.movieId: widget.movieData}, SetOptions(merge: true));
         }
       } else {
         await docRef.set({widget.movieId: widget.movieData});
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Added to your list.')),
+        );
       }
 
       setState(() {
@@ -386,12 +395,21 @@ class _LikeButtonState extends State<LikeButton> {
       final snapshot = await docRef.get();
       if (snapshot.exists) {
         if (isLiked) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Removed from Liked Movies.')),
+          );
           await docRef.update({widget.movieId: FieldValue.delete()});
         } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Added to Liked Movies.')),
+          );
           await docRef
               .set({widget.movieId: widget.movieData}, SetOptions(merge: true));
         }
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Added to Liked Movies.')),
+        );
         await docRef.set({widget.movieId: widget.movieData});
       }
 
@@ -424,7 +442,6 @@ class _LikeButtonState extends State<LikeButton> {
   }
 }
 
-
 class DownloadButton extends StatefulWidget {
   final String userId;
   final String movieId;
@@ -451,8 +468,9 @@ class _DownloadButtonState extends State<DownloadButton> {
   }
 
   Future<void> _checkDownloadStatus() async {
-    final docRef =
-        FirebaseFirestore.instance.collection('downloadedMovies').doc(widget.userId);
+    final docRef = FirebaseFirestore.instance
+        .collection('downloadedMovies')
+        .doc(widget.userId);
     try {
       final snapshot = await docRef.get();
       if (snapshot.exists) {
@@ -467,8 +485,9 @@ class _DownloadButtonState extends State<DownloadButton> {
   }
 
   Future<void> _toggleDownload() async {
-    final docRef =
-        FirebaseFirestore.instance.collection('downloadedMovies').doc(widget.userId);
+    final docRef = FirebaseFirestore.instance
+        .collection('downloadedMovies')
+        .doc(widget.userId);
 
     try {
       final snapshot = await docRef.get();
