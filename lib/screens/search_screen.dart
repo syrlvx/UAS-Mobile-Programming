@@ -12,6 +12,29 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _query = "";
+  String? _selectedGenre = "All Genre"; // Default ke "All Genre"
+  List<String> _genres = ["All Genre"]; // Tambahkan "All Genre" sebagai default
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchGenres(); // Ambil daftar genre saat widget diinisialisasi
+  }
+
+  // Fungsi untuk mengambil daftar genre dari Firestore
+  Future<void> _fetchGenres() async {
+    final moviesCollection =
+        FirebaseFirestore.instance.collection('film'); // Koleksi film
+    final snapshot = await moviesCollection.get();
+    final allGenres = snapshot.docs
+        .map((doc) => (doc['genre'] ?? 'Unknown').toString())
+        .toSet()
+        .toList();
+
+    setState(() {
+      _genres.addAll(allGenres); // Tambahkan genre dari Firestore ke daftar
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,22 +71,31 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          // Jika tidak ada pencarian, tampilkan teks
-          if (_query.isEmpty)
+          // Dropdown menu untuk filter genre
+          if (_genres.isNotEmpty)
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Align(
-                alignment: Alignment.centerLeft, // Memindahkan teks ke kiri
-                child: Text(
-                  "Recommended TV Shows & Movies",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left, // Teks rata kiri
+              padding: const EdgeInsets.all(16.0),
+              child: DropdownButton<String>(
+                value: _selectedGenre,
+                hint: const Text(
+                  "Filter by genre",
+                  style: TextStyle(color: Colors.white),
                 ),
+                dropdownColor: Colors.black,
+                items: _genres.map((genre) {
+                  return DropdownMenuItem<String>(
+                    value: genre,
+                    child: Text(
+                      genre,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGenre = value;
+                  });
+                },
               ),
             ),
 
@@ -75,22 +107,35 @@ class _SearchScreenState extends State<SearchScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text('No movies found.'));
+                  return const Center(
+                      child: Text('No movies found.',
+                          style: TextStyle(color: Colors.white)));
                 }
 
-                // Filter berdasarkan query
+                // Filter berdasarkan query pencarian dan genre yang dipilih
                 final filteredMovies = snapshot.data!.docs.where((doc) {
                   final title = (doc['title'] ?? '').toString().toLowerCase();
-                  return title.contains(_query);
+                  final genre = (doc['genre'] ?? '').toString();
+                  final matchesQuery =
+                      title.contains(_query); // Filter berdasarkan judul
+                  final matchesGenre = _selectedGenre == "All Genre" ||
+                      genre == _selectedGenre; // Filter berdasarkan genre
+                  return matchesQuery && matchesGenre;
                 }).toList();
 
                 if (filteredMovies.isEmpty) {
-                  return const Center(child: Text('No results found.'));
+                  return const Center(
+                      child: Text('No results found.',
+                          style: TextStyle(color: Colors.white)));
                 }
 
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   itemCount: filteredMovies.length,
+                  
+                  
+
+                  
                   itemBuilder: (context, index) {
                     final movie =
                         filteredMovies[index].data() as Map<String, dynamic>;
@@ -141,20 +186,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                     maxLines: 2,
                                   ),
                                   const SizedBox(height: 8),
-                                  // Ikon Play
-                                  Row(
-                                    children: const [
-                                      Icon(Icons.play_circle_fill,
-                                          color: Colors.red, size: 24),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        "Play",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
+                                  // Genre
+                                  Text(
+                                    "Genre: ${movie['genre'] ?? 'Unknown'}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ],
                               ),
