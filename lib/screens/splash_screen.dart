@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/screens/login_screen.dart';
-import 'package:netflix_clone/screens/movie_screen.dart';
-import 'package:netflix_clone/screens/settings_screen.dart';
-import 'package:netflix_clone/screens/signup_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,23 +11,40 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   double _opacity = 0.0;
+  Timer? _opacityTimer;
+  Timer? _navigationTimer;
 
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 500), () {
-      setState(() {
-        _opacity = 1.0;
-      });
+
+    // Timer untuk animasi opacity
+    _opacityTimer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _opacity = 1.0;
+        });
+      }
     });
 
-    Timer(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
-      );
+    // Timer untuk navigasi
+    _navigationTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    // Batalkan Timer saat widget dihapus
+    _opacityTimer?.cancel();
+    _navigationTimer?.cancel();
+    super.dispose();
   }
 
   @override
