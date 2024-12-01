@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/screens/download_screen.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:netflix_clone/screens/globals.dart' as globals;
 
@@ -147,28 +146,29 @@ class _MovieScreenState extends State<MovieScreen> {
                             movieId: widget.documentId,
                             movieData: movie,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Download starting')),
-                              );  
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => DownloadScreen()));
-                            },
-                            child: Column(
-                              children: const [
-                                Icon(Icons.download_rounded,
-                                    color: Colors.white),
-                                SizedBox(height: 5),
-                                Text("Download",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 15)),
-                              ],
-                            ),
+                          DownloadButton(
+                            userId: globals.uid,
+                            movieId: widget.documentId,
+                            movieData: movie,
                           ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       const SnackBar(
+                          //           content: Text('Download starting')),
+                          //     );
+                          //   },
+                          //   child: Column(
+                          //     children: const [
+                          //       Icon(Icons.download_rounded,
+                          //           color: Colors.white),
+                          //       SizedBox(height: 5),
+                          //       Text("Download",
+                          //           style: TextStyle(
+                          //               color: Colors.white, fontSize: 15)),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -416,6 +416,106 @@ class _LikeButtonState extends State<LikeButton> {
           const SizedBox(height: 5),
           const Text(
             "Like",
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class DownloadButton extends StatefulWidget {
+  final String userId;
+  final String movieId;
+  final Map<String, dynamic> movieData;
+
+  const DownloadButton({
+    Key? key,
+    required this.userId,
+    required this.movieId,
+    required this.movieData,
+  }) : super(key: key);
+
+  @override
+  _DownloadButtonState createState() => _DownloadButtonState();
+}
+
+class _DownloadButtonState extends State<DownloadButton> {
+  bool isDownloaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkDownloadStatus();
+  }
+
+  Future<void> _checkDownloadStatus() async {
+    final docRef =
+        FirebaseFirestore.instance.collection('downloadedMovies').doc(widget.userId);
+    try {
+      final snapshot = await docRef.get();
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        setState(() {
+          isDownloaded = data.containsKey(widget.movieId);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error checking download status: $e");
+    }
+  }
+
+  Future<void> _toggleDownload() async {
+    final docRef =
+        FirebaseFirestore.instance.collection('downloadedMovies').doc(widget.userId);
+
+    try {
+      final snapshot = await docRef.get();
+      if (snapshot.exists) {
+        if (isDownloaded) {
+          await docRef.update({widget.movieId: FieldValue.delete()});
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download removed from your list.')),
+          );
+        } else {
+          await docRef
+              .set({widget.movieId: widget.movieData}, SetOptions(merge: true));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Download added to your list.')),
+          );
+        }
+      } else {
+        await docRef.set({widget.movieId: widget.movieData});
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Download added to your list.')),
+        );
+      }
+
+      setState(() {
+        isDownloaded = !isDownloaded;
+      });
+    } catch (e) {
+      debugPrint("Error toggling download: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update download status.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _toggleDownload,
+      child: Column(
+        children: [
+          Icon(
+            isDownloaded ? Icons.check_circle : Icons.download_rounded,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            "Download",
             style: TextStyle(color: Colors.white, fontSize: 15),
           ),
         ],
